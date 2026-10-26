@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Phyllon</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Caveat:wght@500;700&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#F3EBDD;--paper:#FFFAF1;--ink:#302A25;--mute:#6B6055;--acc:#294638;--accf:#FFFAF1;--leaf:#B85F43;--persd:#9E4A31;--moss:#5F5E3E;--olive:#85845B;--line:#DDD0BA;--tape:#C9C39A;--navbg:#294638;--pgo:#F1EEDA;--pgc:#F8E6D8;--pgl:#F7EFE0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1D1812;--paper:#2A231C;--ink:#F1E8D8;--mute:#B3A593;--acc:#8FBF9F;--accf:#14231B;--leaf:#D98466;--persd:#B85F43;--moss:#B5B47F;--olive:#A7A672;--line:#43392E;--tape:#5C5A3E;--navbg:#162219;--pgo:#2F2F21;--pgc:#38271F;--pgl:#2D261D}}
+:root[data-theme="dark"]{--bg:#1D1812;--paper:#2A231C;--ink:#F1E8D8;--mute:#B3A593;--acc:#8FBF9F;--accf:#14231B;--leaf:#D98466;--persd:#B85F43;--moss:#B5B47F;--olive:#A7A672;--line:#43392E;--tape:#5C5A3E;--navbg:#162219;--pgo:#2F2F21;--pgc:#38271F;--pgl:#2D261D}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg) radial-gradient(900px 520px at 80% -12%,rgba(255,206,140,.26),transparent 70%) no-repeat;color:var(--ink);font:16px/1.55 "Instrument Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.15;margin:0}
+.hand{font-family:Caveat,"Segoe Print",cursive;font-size:1.35em;line-height:1.3}
+.mute{color:var(--mute)}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav{position:sticky;top:0;height:100vh;padding:28px 18px;display:flex;flex-direction:column;gap:4px;background:var(--navbg);color:#F3EBDD}
+.logo{font:500 1.6rem Fraunces,serif;margin-bottom:26px;display:flex;gap:8px;align-items:center}.logo svg path:first-child{fill:#C9C58F}
+nav button{display:flex;gap:12px;align-items:center;background:none;border:0;padding:10px 12px;border-radius:4px 14px 4px 14px;text-align:left;color:#DAD3BF}
+nav button:hover{background:rgba(255,250,241,.1)}nav button.on{background:rgba(255,250,241,.14);color:#FFFAF1;font-weight:600;box-shadow:inset 3px 0 #D98466}
+nav button.cta{background:var(--persd);color:#FFFAF1;margin:8px 0;font-weight:600}nav :focus-visible{outline-color:#FFFAF1}
+nav .sp{flex:1}nav .study{border:1.5px dashed #A9A58A;border-radius:6px}
+main{padding:34px clamp(16px,4vw,56px) 90px;max-width:1080px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.top h1{font-size:clamp(1.8rem,4vw,2.6rem);max-width:16ch}
+.btn{border:0;background:var(--acc);color:var(--accf);padding:10px 18px;border-radius:4px 16px 4px 16px;font-weight:600}
+.btn.ghost{background:none;color:var(--ink);border:1.5px solid var(--ink)}.btn.sm{padding:6px 12px;font-size:.9rem}
+.feed{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;align-items:start}.span2{grid-column:1/-1}
+.card{background:var(--paper);padding:20px;border-radius:3px;position:relative;box-shadow:0 1px 0 var(--line),0 8px 20px -14px #0006}
+.card.tilt{border-top:3px solid var(--olive)}.card.tilt2{border-top:3px solid var(--leaf)}
+.card.dark{background:var(--navbg);color:#F3EBDD}.card.dark .mute{color:#CFC8B0}
+.who{display:flex;gap:10px;align-items:center;margin-bottom:10px;font-size:.92rem}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;flex:none}
+.cv{aspect-ratio:2/3;border-radius:2px 5px 5px 2px;padding:10% 9%;display:flex;flex-direction:column;justify-content:space-between;color:#fff;font:600 .8rem/1.15 Fraunces,serif;box-shadow:inset 4px 0 #0003,2px 4px 10px -4px #0008;overflow:hidden;width:100%}
+.cv small{font:500 .6rem "Instrument Sans";opacity:.85}.cvw{width:84px;flex:none}.cvw.sm{width:58px}.cvw.lg{width:150px}
+.row{display:flex;gap:14px;align-items:flex-start}.wrap{flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:22px}
+.bk{background:none;border:0;padding:0;text-align:left}.bk:hover .cv{transform:translateY(-4px) rotate(-1deg)}.cv{transition:transform .2s}
+.chip{display:inline-block;border:1.5px solid var(--moss);color:var(--moss);padding:1px 10px;border-radius:20px 6px 20px 6px;font-size:.82rem;background:none;margin:0 6px 6px 0}
+.chip.on{background:var(--moss);color:var(--paper)}
+.stars{color:var(--leaf);letter-spacing:2px}.stars b{background:none;border:0;font-size:1.7rem;color:var(--line);padding:0 2px}.stars b.f{color:var(--leaf)}
+.poll button{display:block;width:100%;text-align:left;margin:6px 0;padding:8px 12px;background:none;border:1.5px solid var(--ink);border-radius:3px;position:relative;overflow:hidden}
+.poll i{position:absolute;inset:0 auto 0 0;background:var(--tape);opacity:.5;z-index:0}.poll span{position:relative}
+.pg{position:relative;background:var(--paper);padding:22px 20px;border-radius:2px 2px 6px 3px;overflow:hidden;aspect-ratio:5/7;display:flex;flex-direction:column;gap:8px;box-shadow:0 14px 30px -16px #000a;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E)}
+.pg.mint{background-color:var(--pgo)}.pg.plum{background-color:var(--pgc)}.pg.sky{background-color:var(--pgl)}.pg.paper{background-color:var(--paper)}
+.pg:before{content:"";position:absolute;top:-6px;left:50%;width:90px;height:22px;background:var(--tape);opacity:.75;transform:translateX(-50%) rotate(-3deg)}
+.pg .txt{flex:1;overflow:auto;font-size:1rem;line-height:1.65}.pg blockquote{margin:0;border-left:3px solid var(--leaf);padding-left:10px}
+.pg .stk{display:flex;gap:8px}.pg .stk svg{width:40px;height:40px;filter:drop-shadow(1px 2px 1px #0003)}.pg .stk svg:nth-child(odd){transform:rotate(-8deg)}.pg .stk svg:nth-child(even){transform:rotate(6deg)}.pg footer{font-size:.78rem}
+.mini{aspect-ratio:auto;min-height:0}
+.book{display:grid;grid-template-columns:200px 1fr;gap:28px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);padding:9px 12px;border-radius:3px;width:100%}
+textarea{min-height:130px;resize:vertical}label{display:block;font-weight:600;margin:14px 0 4px}
+.comp{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,440px);gap:44px;align-items:start}
+.banner{background:var(--acc);color:var(--accf);padding:14px 18px;border-radius:3px;margin-bottom:18px;animation:in .6s}
+.jr{display:grid;grid-template-columns:minmax(0,380px) 1fr;gap:34px;align-items:start}
+.flipL,.flipR{transform-origin:left center;animation-duration:.6s;animation-timing-function:cubic-bezier(.3,.7,.2,1)}.flipR{animation-name:fr}.flipL{animation-name:fl}
+@keyframes fr{from{transform:perspective(1100px) rotateY(-75deg);opacity:.15}}@keyframes fl{from{transform:perspective(1100px) rotateY(55deg);opacity:.15}}
+@keyframes in{from{transform:translateY(-8px);opacity:0}}
+.pgs{display:flex;gap:8px;overflow-x:auto;padding:6px 2px}.pgs .cvw{width:44px;opacity:.6}.pgs .on .cvw{opacity:1;outline:2px solid var(--acc)}
+.tab{background:none;border:0;border-bottom:2px solid transparent;padding:6px 2px;margin-right:16px;color:var(--mute)}.tab.on{color:var(--ink);border-color:var(--acc)}
+.empty{border:2px dashed var(--line);padding:30px;text-align:center;border-radius:3px}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:20px;opacity:0;transition:.3s;pointer-events:none;z-index:9}#toast.show{opacity:1}
+@media (max-width:860px){
+.app{display:block}
+nav{position:fixed;z-index:5;bottom:0;left:0;right:0;top:auto;height:auto;flex-direction:row;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));background:var(--paper);border-top:1px solid var(--line);border-right:0;gap:0}
+nav .logo,nav .sp,nav .lbl{display:none}nav button{flex-direction:column;gap:0;font-size:.7rem;padding:6px;flex:1;align-items:center}nav button{color:var(--mute)}nav button:hover{background:none}nav :focus-visible{outline-color:var(--acc)}nav button.on{box-shadow:none;color:var(--acc);background:none}
+nav button.cta{border-radius:50%;flex:none;width:48px;height:48px;margin:-22px 0 0;justify-content:center;font-size:1.4rem}nav .study{border:0}
+.feed,.book,.comp,.jr{grid-template-columns:1fr}.span2{grid-column:auto}main{padding-top:22px}.jr .pg{max-width:380px}}
+.sprig{display:block;margin-bottom:8px}.btn.pers{background:var(--persd);color:#FFFAF1}
+h1{font-weight:500;letter-spacing:-.01em}.top{margin-bottom:30px}.card{border:1px solid var(--line);border-radius:6px}.card.dark{border-color:transparent}
+.cv{position:relative}.cv:after{content:"";position:absolute;inset:5%;border:1px solid rgba(255,250,241,.3);pointer-events:none}.cv span{display:block;font-size:1.05em;margin-bottom:5px}.cv small{display:block}
+.cm{display:block;width:14px;height:14px;opacity:.75;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M5 35C4 17 15 5 35 5c1 19-9 31-30 30Z' fill='%23FFFAF1'/%3E%3C/svg%3E") center/contain no-repeat}
+.empty{border-color:var(--olive);border-radius:6px}.empty:before{content:"";display:block;width:34px;height:34px;margin:0 auto 10px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M5 35C4 17 15 5 35 5c1 19-9 31-30 30Z' fill='%2385845B'/%3E%3Cpath d='M5 35 29 11' stroke='%23FFFAF1' stroke-width='1.4' fill='none'/%3E%3C/svg%3E") center/contain no-repeat}
+.grid{gap:30px 22px}.cv:before{content:"";position:absolute;left:0;top:0;bottom:0;width:7%;background:linear-gradient(90deg,#0005,transparent)}
+.cv.v1{padding:0;justify-content:flex-end}.cv.v1>div{background:rgba(0,0,0,.3);padding:10% 9% 8%;margin-bottom:20%}.cv.v2{align-items:center;text-align:center}.cv.v2 span{font-size:1.15em}
+.bk:hover .cv{box-shadow:inset 4px 0 #0003,4px 12px 16px -6px #000b}
+.pg:after{content:"";position:absolute;right:-6px;bottom:30px;width:110px;height:140px;opacity:.14;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 38C20 25 22 12 30 3' stroke='%2385845B' stroke-width='1' fill='none'/%3E%3Cg fill='%2385845B'%3E%3Cellipse cx='24' cy='12' rx='6' ry='2.2' transform='rotate(-30 24 12)'/%3E%3Cellipse cx='14' cy='16' rx='6' ry='2.2' transform='rotate(25 14 16)'/%3E%3Cellipse cx='25' cy='22' rx='6' ry='2.2' transform='rotate(-30 25 22)'/%3E%3Cellipse cx='14' cy='27' rx='6' ry='2.2' transform='rotate(25 14 27)'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat}
+.pg footer{display:flex;align-items:baseline;gap:10px}.folio{font:500 1rem Fraunces,serif;color:var(--leaf);min-width:1.4em}
+.rule{display:flex;align-items:center;gap:12px;margin:48px 0 30px}.rule:before,.rule:after{content:"";flex:1;height:1px;background:var(--line)}
+.edh{max-width:640px;margin-bottom:40px}.edh h1{font-size:clamp(2rem,4.2vw,3rem)}.lede{font-size:1.08rem;color:var(--mute);margin:12px 0 0;max-width:46ch}
+.hm{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:56px;align-items:start}.hl .pg{margin:16px 0 20px}.cap{display:flex;gap:10px;align-items:center}
+.hr>*+*{margin-top:34px}.hr h2,.hb h2{font-size:1.2rem;margin-bottom:12px}
+.now{display:flex;gap:18px;background:var(--navbg);color:#F3EBDD;padding:20px;border-radius:6px}.now .mute{color:#CFC8B0}
+.qt{margin:0;border-left:3px solid var(--leaf);padding-left:18px}.qt blockquote{margin:0 0 6px;font-size:1.8em}
+.ups{list-style:none;padding:0;margin:0}.ups li{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.hb{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:40px}
+.comp>div:first-child{background:var(--paper);padding:6px 28px 28px;border:1px solid var(--line);border-radius:6px}.comp label{margin:22px 0 6px}
+#ct{min-height:220px;font:1.1rem/1.7 Fraunces,Georgia,serif}
+.jc{display:grid;grid-template-columns:minmax(0,380px) 1fr;gap:56px;align-items:start}
+.jbook{background:var(--navbg);color:#F3EBDD;padding:44px 34px;border-radius:4px 10px 10px 4px;aspect-ratio:5/7;display:flex;flex-direction:column;justify-content:center;gap:14px;box-shadow:inset 9px 0 0 #0004,0 26px 40px -22px #000b;outline:1px solid rgba(201,197,143,.5);outline-offset:-14px}.jbook h1{font-size:2.1rem}
+.tl{list-style:none;margin:0;padding:0 0 0 18px;border-left:1.5px solid var(--olive)}.tl li{position:relative;padding:0 0 18px}.tl li:before{content:"";position:absolute;left:-24px;top:7px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:2px solid var(--leaf)}.tl .bk:hover b{text-decoration:underline}
+.pgs .bk{text-align:center}.pgs small{display:block;font-size:.7rem;color:var(--mute)}
+.study{position:relative;overflow:hidden;max-width:640px;padding:44px 36px 110px;border-radius:6px;color:#F3EBDD;background:radial-gradient(380px 240px at 88% 0,rgba(217,132,102,.3),transparent 70%),#162219;box-shadow:inset 0 0 90px #000a}
+.shelves{position:absolute;left:0;right:0;bottom:0;height:56px;opacity:.75;background:repeating-linear-gradient(90deg,#294638 0 14px,#1d3328 14px 20px,#3b5a46 20px 31px,#0f1913 31px 35px,#6A6944 35px 41px,#162219 41px 46px)}
+@media (max-width:860px){.hm,.hb,.jc{grid-template-columns:1fr;gap:28px}.hl .pg{max-width:380px}.comp>div:first-child{padding:6px 18px 22px}}
+.btn{transition:filter .15s,transform .1s}.btn:hover{filter:brightness(1.1)}.btn:active{transform:translateY(1px)}
+.chip{transition:background .2s,color .2s}.chip.on{animation:pop .28s}@keyframes pop{50%{transform:scale(1.1)}}
+.pg .chip.on{background:var(--pa,var(--moss));border-color:var(--pa,var(--moss));color:#FFFAF1}.pq{border-left:3px solid var(--pa,var(--leaf));margin:0;padding-left:10px}.folio{color:var(--pa,var(--leaf))}
+.ph{order:1}.mchips{order:2}.pg .txt{order:3}.pq{order:4}.ann{order:5}.pg .stk{order:6}.pg footer{order:7}
+.ann{border-left:2px dashed var(--olive);padding-left:10px;transform:rotate(-.6deg)}.ann p{margin:0}
+.lay-quo .pq{order:0;font-size:1.65em;line-height:1.2}.lay-quo .txt{font-size:.92rem}
+.lay-min .stk,.lay-min:after{display:none}.lay-min .cvw{width:40px}.lay-min .txt{padding:6px 4px}
+.lay-ann .ann{order:2;background:rgba(133,132,91,.14);padding:8px 10px}
+.placed{display:grid;justify-items:center;text-align:center;gap:10px;padding-top:30px}.slot{width:220px;height:250px;overflow:hidden}.slot .pg{animation:drop 1.1s cubic-bezier(.5,0,.3,1) both}.jb{width:250px;height:30px;margin-top:-20px;background:var(--navbg);border-radius:3px 3px 10px 10px;position:relative;box-shadow:0 14px 20px -12px #000a}
+@keyframes drop{from{transform:translateY(-120px) rotate(-4deg);opacity:0}60%{opacity:1}}
+.quiz{margin-bottom:20px}.lrow{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}.inl{display:inline-flex;gap:8px;align-items:center;margin:0;font-weight:500}.inl select{width:auto}
+.ins{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:0 0 16px}.ins div{border-top:2px solid var(--olive);padding-top:6px}.ins dt{color:var(--mute);font-size:.85rem}.ins dd{margin:0;font:500 1.5rem Fraunces,serif}
+.ord{display:inline-flex;gap:2px;margin-right:10px;align-items:center}.mv{border:1px solid var(--line);background:var(--paper);width:26px;height:26px;border-radius:3px}
+.hb.mine{margin-top:40px}button[aria-pressed="true"]:not(.chip){background:var(--acc);color:var(--accf);border-color:var(--acc)}.poll button[aria-pressed="true"]{background:none;color:inherit;border-color:var(--ink);font-weight:600}
+@media (max-width:860px){.hb.mine{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app"><nav id="nav"></nav><main id="main"></main></div>
+<div id="toast" role="status"></div>
+<script>
+/* Data model (print-ready): Page = {id, bookId, rating, moods[], text, quote, paper, stickers[], hand, vis, date}.
+   Every page renders at a fixed 5:7 ratio, so a future export maps 1 page = 1 printed sheet. Swap load/save for an API later. */
+const BRAND="Phyllon";/* change the product name here */document.title=BRAND+": a reading life, kept";
+const B=[
+{id:1,t:"Piranesi",a:"Susanna Clarke",c:["#294638","#122219"],m:["Haunted","Wistful","Hopeful"],d:"A man lives in an endless house of statues and tides, and keeps a very careful journal."},
+{id:2,t:"The Secret History",a:"Donna Tartt",c:["#6E2F26","#2f1310"],m:["Haunted","Restless"],d:"Six classics students, one decision they cannot take back."},
+{id:3,t:"Rebecca",a:"Daphne du Maurier",c:["#6A6944","#26261a"],m:["Haunted","Restless"],d:"The second Mrs de Winter walks through rooms still arranged for someone else."},
+{id:4,t:"Klara and the Sun",a:"Kazuo Ishiguro",c:["#B85F43","#5a2616"],m:["Tender","Wistful"],d:"An artificial friend watches closely and learns what devotion costs."},
+{id:5,t:"Circe",a:"Madeline Miller",c:["#35504F","#14232a"],m:["Furious","Hopeful"],d:"The witch of Aiaia tells her own side, one exile at a time."},
+{id:6,t:"The Remains of the Day",a:"Kazuo Ishiguro",c:["#6B5B4A","#2c241c"],m:["Wistful","Tender"],d:"A butler drives west and reviews a lifetime of quiet loyalty."},
+{id:7,t:"Jane Eyre",a:"Charlotte Brontë",c:["#7A3B34","#2c1512"],m:["Furious","Hopeful"],d:"Reader, she did not simply marry him."},
+{id:8,t:"Station Eleven",a:"Emily St. John Mandel",c:["#3F5E4C","#1a2b22"],m:["Cozy","Hopeful","Wistful"],d:"After the collapse, a travelling symphony insists that survival is not enough."}];
+const MOODS=["Wrecked","Cozy","Haunted","Hopeful","Restless","Tender","Furious","Wistful"];
+const SVG={};
+const AV=["#294638","#9E4A31","#5F5E3E","#4A3F36"];
+const PL={paper:"ivory",mint:"olive",plum:"clay",sky:"linen"},SL={leaf:"olive leaf",bloom:"maple",star:"fern"};
+Object.assign(SVG,{leaf:'<svg viewBox="0 0 40 40"><path d="M5 35C4 17 15 5 35 5c1 19-9 31-30 30Z" fill="#85845B"/><path d="M5 35 29 11M15 25l-1-8M20 20l-1-8M18 27h8M24 21h7" stroke="#FFFAF1" stroke-opacity=".6" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>',bloom:'<svg viewBox="0 0 40 40"><path d="M20 4l4 9 8-4-3 10 9 1-7 6 4 8-9-2-2 7h-8l-2-7-9 2 4-8-7-6 9-1-3-10 8 4z" fill="#B85F43"/><path d="M20 36V14M20 24l-7-6M20 24l7-6" stroke="#FFFAF1" stroke-opacity=".55" stroke-width="1.2" fill="none"/></svg>',star:'<svg viewBox="0 0 40 40"><path d="M20 38C20 25 22 12 30 3" stroke="#4F6F5A" stroke-width="1.6" fill="none"/><g fill="#4F6F5A"><ellipse cx="24" cy="12" rx="6" ry="2.2" transform="rotate(-30 24 12)"/><ellipse cx="14" cy="16" rx="6" ry="2.2" transform="rotate(25 14 16)"/><ellipse cx="25" cy="22" rx="6" ry="2.2" transform="rotate(-30 25 22)"/><ellipse cx="14" cy="27" rx="6" ry="2.2" transform="rotate(25 14 27)"/><ellipse cx="24" cy="31" rx="5" ry="2" transform="rotate(-30 24 31)"/></g></svg>'});
+const sprig=()=>'<svg class="sprig" width="110" height="22" viewBox="0 0 110 22" aria-hidden="true"><path d="M2 12C30 9 70 14 108 8" stroke="#85845B" stroke-width="1.4" fill="none"/><g fill="#85845B"><ellipse cx="24" cy="6" rx="7" ry="3" transform="rotate(-25 24 6)"/><ellipse cx="46" cy="17" rx="7" ry="3" transform="rotate(25 46 17)"/><ellipse cx="68" cy="7" rx="7" ry="3" transform="rotate(-25 68 7)"/></g><ellipse cx="92" cy="15" rx="7" ry="3" transform="rotate(25 92 15)" fill="#B85F43"/></svg>';
+const bk=id=>B.find(b=>b.id==id);
+const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v||d}catch(e){return d}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let pages=load('mg_pages',[
+{id:1,b:1,r:5,moods:["Haunted","Hopeful"],text:"I read the last forty pages on the floor of the hallway because I did not want to leave the house. Kind of the point.",quote:"The beauty of the House is immeasurable; its kindness infinite.",paper:"mint",stk:["leaf"],hand:true,vis:"public",date:"2026-09-14"},
+{id:2,b:6,r:4,moods:["Wistful"],text:"Stevens is so polite that his regret has to leak out sideways. I closed the book and rang my father.",quote:"",paper:"sky",stk:["star"],hand:false,vis:"friends",date:"2026-10-02"}]);
+let lib=load('mg_lib',{1:"read",6:"read",3:"now",2:"want",8:"want"});
+let S={v:(location.hash||"#home").slice(1),book:null,jp:0,tab:"all",mood:"",q:"",d:null,dir:"",join:load('mg_join',{}),poll:load('mg_poll',null),fresh:false,open:false};
+if(!/^(home|discover|library|create|community|profile|mystery)$/.test(S.v))S.v="home";
+const stars=n=>"★".repeat(n)+"☆".repeat(5-n);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cover=(b,s="")=>`<div class="cvw ${s}" title="${b.m.join(', ')} · ${b.p} pages"><div class="cv v${b.id%3}" style="background:linear-gradient(160deg,${b.c[0]},${b.c[1]})"><div><span>${b.t}</span><small>${b.a}</small></div><i class="cm"></i></div></div>`;
+const bkBtn=(b,s="")=>`<button class="bk" data-a="book" data-id="${b.id}" aria-label="${esc(b.t)}">${cover(b,s)}</button>`;
+const fmt=d=>new Date(d+"T12:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+const toast=m=>{const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)};
+
+function pageHTML(p,cls=""){const b=bk(p.b),lay=p.lay||"bot",col=MC[p.moods[0]];
+return `<article class="pg ${p.paper} lay-${lay} ${cls}" style="${col?`--pa:${col};`:""}transform:rotate(${(p.id%3-1)*.4}deg)"><div class="row ph">${cover(b,"sm")}<div><h3>${b.t}</h3><div class="mute">${b.a}</div><div class="stars" aria-label="${p.r} of 5 stars">${stars(p.r)}</div></div></div>
+<div class="mchips">${p.moods.map(m=>`<span class="chip on">${m}</span>`).join("")}</div>
+<div class="txt ${p.hand?"hand":""}">${esc(p.text)||'<span class="mute">Your words land here.</span>'}</div>
+${p.quote?`<blockquote class="hand pq">${esc(p.quote)}</blockquote>`:""}
+${p.where||p.rem?`<div class="ann hand">${p.where?`<p>Finished: ${esc(p.where)}</p>`:""}${p.rem?`<p>To remember: ${esc(p.rem)}</p>`:""}</div>`:""}
+<div class="stk">${(p.stk||[]).map(s=>SVG[s]||"").join("")}</div><footer class="mute"><b class="folio">${folio(p)}</b>${fmt(p.date)} · ${p.vis==="public"?"Set to public":p.vis==="friends"?"Friends only":"Private"}</footer></article>`}
+
+const NAV=[["home","Home","⌂"],["discover","Discover","✦"],["library","My library","▤"],["create","Write a page","＋"],["community","Community","☺"],["profile","Journal","❦"]];
+function nav(){document.getElementById("nav").innerHTML=`<div class="logo">${LOGO}${BRAND}</div>`+
+NAV.map(([k,l,i])=>`<button data-a="go" data-v="${k}" class="${S.v===k?"on":""} ${k==="create"?"cta":""}" ${S.v===k?'aria-current="page"':""} aria-label="${l}"><span aria-hidden="true">${i}</span><span class="${k==="create"?"lbl":""}">${k==="create"?"Write a page":l}</span></button>`).join("")+
+`<div class="sp"></div><button data-a="go" data-v="mystery" class="study ${S.v==="mystery"?"on":""}"><span aria-hidden="true">🗝</span><span>The Study</span></button>`}
+
+const V={};
+/* ---- v4 interactive layer ---- */
+if(!Array.isArray(pages))pages=[];pages=pages.filter(p=>p&&bk(p.b)&&Array.isArray(p.moods));
+if(typeof lib!=="object"||Array.isArray(lib))lib={};
+let rxn=load('mg_rx',{}),bm=load('mg_bm',{}),notes=load('mg_notes',{}),upd=load('mg_upd',{}),pref=load('mg_pref',{lv:'grid',sort:'upd'});
+const PGS={1:272,2:559,3:380,4:303,5:393,6:258,7:507,8:333};B.forEach(b=>b.p=PGS[b.id]);
+const MC={Wrecked:"#9E4A31",Cozy:"#B85F43",Haunted:"#294638",Hopeful:"#5F5E3E",Restless:"#6B4F3A",Tender:"#85845B",Furious:"#7E2F22",Wistful:"#4F6F5A"};
+const PR=["What did the last page make you want to do?","Which character would you phone first, and why?","What kind of light does this book belong in?","What do you want to remember about this book in a year?","Which sentence did you read twice?","Who should read this next, and what should they know first?","What did you expect that never came?"];
+const prompt=()=>PR[new Date().getDate()%PR.length];
+const SORTED=()=>[...pages].sort((a,b)=>a.date.localeCompare(b.date));
+Object.assign(SVG,{stamp:'<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="#9E4A31" stroke-width="2"/><circle cx="20" cy="20" r="12" fill="none" stroke="#9E4A31" stroke-dasharray="2 2"/><text x="20" y="24" text-anchor="middle" font-size="9" font-family="Fraunces,serif" fill="#9E4A31">READ</text></svg>',tape:'<svg viewBox="0 0 40 40"><rect x="3" y="12" width="34" height="16" fill="#C9C39A" opacity=".9" transform="rotate(-8 20 20)"/></svg>'});
+Object.assign(SL,{stamp:"stamp",tape:"tape"});
+const D0=b=>({b,r:0,moods:[],text:"",quote:"",paper:"paper",stk:[],hand:true,vis:"public",date:new Date().toISOString().slice(0,10),lay:"bot",where:"",rem:""});
+const loadDraft=bid=>{const x=load("mg_draft",null);if(x&&typeof x==="object"&&bk(x.b)&&Array.isArray(x.moods)&&Array.isArray(x.stk)&&(!bid||x.b==bid))return{...D0(x.b),...x};return D0(bid||(B.find(b=>lib[b.id]==="now")||B[0]).id)};
+const topMoods=()=>{const c={};pages.forEach(p=>p.moods.forEach(m=>c[m]=(c[m]||0)+1));return Object.entries(c).sort((a,b)=>b[1]-a[1])};
+const LEN=b=>b.p<300?"s":b.p>400?"l":"m";
+const quizHTML=()=>{const Q=S.quiz;let r="";
+if(Q.m&&Q.l){const sc=B.map(b=>({b,s:(b.m.includes(Q.m)?2:0)+(LEN(b)===Q.l?1:0)})).sort((a,c)=>c.s-a.s).slice(0,3);
+r=`<div class="row wrap" style="margin-top:16px">${sc.map(({b})=>`<div class="row" style="flex:1;min-width:220px">${bkBtn(b,"sm")}<div><b>${b.t}</b><p class="mute" style="margin:2px 0 6px;font-size:.88rem">${b.m.includes(Q.m)?"Feels "+Q.m.toLowerCase():"Not quite "+Q.m.toLowerCase()} · ${b.p} pages</p><button class="btn ghost sm" data-a="status" data-id="${b.id}" data-s="want" ${lib[b.id]?"disabled":""}>${lib[b.id]?"On your shelf":"Want to read"}</button></div></div>`).join("")}</div>`}
+return `<div class="card quiz"><b>Find my next read</b><p class="mute" style="margin:2px 0 8px">Matches use each book’s moods and page count. Pick both.</p><div>${MOODS.map(m=>`<button class="chip ${Q.m===m?"on":""}" data-a="qm" data-m="${m}">${m}</button>`).join("")}</div><div>${[["s","Under 300 pages"],["m","300 to 400"],["l","Over 400"]].map(([k,l])=>`<button class="chip ${Q.l===k?"on":""}" data-a="ql" data-l="${k}">${l}</button>`).join("")}</div>${r}</div>`};
+const insights=()=>{const n=pages.length;if(n<2)return `<p class="mute">Insights appear once you’ve kept two pages.</p>`;
+const avg=(pages.reduce((a,p)=>a+p.r,0)/n).toFixed(1),top=topMoods()[0],fin=B.filter(b=>lib[b.id]==="read").length;
+return `<dl class="ins"><div><dt>Pages kept</dt><dd>${n}</dd></div><div><dt>Books finished</dt><dd>${fin}</dd></div><div><dt>Average rating</dt><dd>${avg}</dd></div><div><dt>Most felt</dt><dd>${top?top[0]:"—"}</dd></div></dl>`};
+const mine=()=>{const top=topMoods().slice(0,3),now=B.find(b=>lib[b.id]==="now"),want=B.find(b=>lib[b.id]==="want");
+return `<div class="hb mine"><div><h2>What your pages feel like</h2>${top.length?top.map(([m,n])=>`<span class="chip on" style="--pa:${MC[m]}">${m} · ${n}</span>`).join(""):`<p class="mute">Write a page and your moods will gather here.</p>`}</div>
+<div><h2>Continue your journey</h2>${now?`<p>You’re reading <b>${now.t}</b>.</p><button class="btn pers sm" data-a="finish" data-id="${now.id}">I finished it</button>`:want?`<p>Next on your shelf: <b>${want.t}</b>.</p><button class="btn ghost sm" data-a="status" data-id="${want.id}" data-s="now">Start reading</button>`:`<p class="mute">Your shelves are empty.</p><button class="btn ghost sm" data-a="go" data-v="discover">Find a book</button>`}</div>
+<div><h2>Today’s prompt</h2><p class="hand" style="margin-top:0">${prompt()}</p><button class="btn ghost sm" data-a="go" data-v="create">Write a page</button>${bm.mira1?`<p class="mute" style="margin-top:14px">Saved for later: Mira’s page (sample) <button class="tab" data-a="bm" data-k="mira1">Remove</button></p>`:""}</div></div>`};
+const LOGO='<svg width="30" height="30" viewBox="0 0 40 40" aria-hidden="true"><path d="M6 34C5 16 16 5 35 5c1 19-10 31-29 29Z" fill="#C9C58F"/><path d="M6 34 30 10M14 26h9M19 20h9" stroke="#294638" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M28 5v10l3-2 3 2V6" fill="#D98466"/></svg>';
+const rule=()=>'<div class="rule" aria-hidden="true">'+SVG.leaf.replace('<svg','<svg width="22" height="22"')+'</div>';
+const folio=p=>{const s=[...pages].sort((a,b)=>a.date.localeCompare(b.date)),i=s.findIndex(q=>q.id===p.id);return i<0?"·":i+1};
+const shortDate=d=>new Date(d+"T12:00:00").toLocaleDateString("en-GB",{month:"short",year:"2-digit"});
+
+V.home=()=>{const day=new Date().toLocaleDateString("en-GB",{weekday:"long"}),now=B.find(b=>lib[b.id]==="now"),fp=pages[0],voted=S.poll;
+const po=[["Ending in the last line",42],["Ending a chapter early",23],["Ending I never see coming",35]];
+return `<header class="edh">${sprig()}<p class="mute" style="margin:0">${day} evening</p><h1>The reading room is open.</h1><p class="lede">Pull up a chair. The readers shown below are sample content for this prototype; your own pages, shelves and votes are real and saved on this device.</p></header>
+<div class="hm"><section class="hl"><div class="cap"><span class="av" style="background:${AV[1]}">M</span><span><b>Mira</b> <span class="mute">(sample reader)</span> shared a page for <b>${bk(fp.b).t}</b></span></div>${pageHTML(fp,"feat")}<div class="tools"><button class="btn ghost sm" data-a="react" data-k="mira1" aria-pressed="${!!rxn.mira1}">${rxn.mira1?"Appreciated":"Appreciate"}</button><button class="btn ghost sm" data-a="bm" data-k="mira1" aria-pressed="${!!bm.mira1}">${bm.mira1?"Saved":"Save for later"}</button><button class="btn ghost sm" data-a="shuffle">Random page from my journal</button></div></section>
+<section class="hr">${now?`<div><h2>On your nightstand</h2><div class="now">${bkBtn(now,"")}<div><h3>${now.t}</h3><p class="mute" style="margin:2px 0 12px">${now.a}</p><button class="btn pers sm" data-a="finish" data-id="${now.id}">I finished it</button></div></div></div>`:""}
+<figure class="qt"><blockquote class="hand">The past is a country you cannot afford to visit twice.</blockquote><figcaption class="mute">Jonas underlined this in <i>The Remains of the Day</i></figcaption></figure>
+<div class="poll"><h2>What makes a last chapter land?</h2>${po.map((o,i)=>`<button data-a="poll" data-i="${i}" aria-pressed="${voted===i}">${voted!==null?`<i style="width:${o[1]+(voted===i?5:0)}%"></i>`:""}<span>${o[0]}${voted!==null?` · ${o[1]+(voted===i?5:0)}%`:""}</span></button>`).join("")}</div>
+<h2>Around the room (sample readers)</h2><ul class="ups"><li><span class="av" style="background:${AV[2]}">J</span>Jonas started <i>Station Eleven</i></li><li><span class="av" style="background:${AV[0]}">K</span>Kavya added <i>Rebecca</i> to Rainy Sundays</li><li><span class="av" style="background:${AV[3]}">A</span>Ana marked <i>Circe</i> as want to read</li></ul></section></div>
+${mine()}${rule()}<div class="hb"><div><h2>Books that feel Haunted</h2>${[2,3,5].map(i=>`<div class="row" style="margin-top:16px">${bkBtn(bk(i),"sm")}<div><b>${bk(i).t}</b><p class="mute" style="margin:2px 0 6px;font-size:.9rem">${bk(i).d}</p><button class="btn ghost sm" data-a="status" data-id="${i}" data-s="want">${lib[i]?"On your shelf":"Want to read"}</button></div></div>`).join("")}</div>
+<div><h2>The Slow Readers</h2><p>This month: <i>Rebecca</i>. The thread on chapter one is open: <b>why does she never get a name?</b></p><button class="btn ghost sm" data-a="go" data-v="community">Join the thread</button></div>
+<div><h2>Books for rainy Sundays</h2><p class="mute">A list by Ana, six books.</p><div class="row">${[8,4,6].map(i=>bkBtn(bk(i),"sm")).join("")}</div></div></div>`};
+
+V.mystery=()=>`<div class="top"><h1>The Study</h1></div><div class="study"><p class="hand" style="margin:0">The door is locked for now.</p><p style="max-width:42ch">Murder mysteries and group investigations will live here, apart from your everyday shelves. Nothing in your journal changes when it opens.</p><div class="shelves" aria-hidden="true"></div></div>`;
+
+V.profile=()=>{if(S.open)return V.profileOpen();const s=[...pages].sort((a,b)=>a.date.localeCompare(b.date)),fav=pages.filter(p=>p.r>=5).length;
+return `<div class="jc"><div class="jbook">${SVG.leaf.replace('<svg','<svg width="46" height="46"')}<h1>Ana’s<br>reading journal</h1>${sprig()}<p style="margin:0">${pages.length} pages · ${fav} favourite${fav===1?"":"s"}${s.length?` · since ${s[0].date.slice(0,4)}`:""}</p><div><button class="btn pers" data-a="open">Open the journal</button></div></div>
+<div>${insights()}<div class="tools"><button class="btn ghost sm" data-a="shuffle">Shuffle my journal</button></div><h2 style="margin:22px 0 16px">Your reading, in order</h2>${s.length?`<ol class="tl">${s.map((p,i)=>`<li><button class="bk" data-a="jumpopen" data-n="${i}"><b>${bk(p.b).t}</b> <span class="mute">${shortDate(p.date)} · <span class="stars">${stars(p.r)}</span></span></button></li>`).join("")}</ol>`:`<div class="empty">Nothing here yet. Finish a book and write your first page.</div>`}</div></div>`};
+
+V.discover=()=>{const q=S.q.toLowerCase(),r=B.filter(b=>(!S.mood||b.m.includes(S.mood))&&(!q||(b.t+b.a).toLowerCase().includes(q)));
+return `<div class="top"><h1>Find a book that feels like…</h1><div class="tools"><button class="btn ghost sm" data-a="surprise">Surprise me</button><button class="btn ghost sm" data-a="quiz" aria-pressed="${!!S.quiz}">${S.quiz?"Close the quiz":"Find my next read"}</button></div></div>${S.quiz?quizHTML():""}<input id="q" type="search" placeholder="Search a title or author" value="${esc(S.q)}" aria-label="Search books"><div style="margin:14px 0 22px">${MOODS.map(m=>`<button class="chip ${S.mood===m?"on":""}" data-a="mood" data-m="${m}" aria-pressed="${S.mood===m}">${m}</button>`).join("")}</div>
+${r.length?`<div class="grid">${r.map(b=>`<div>${bkBtn(b)}<p style="margin:8px 0 6px"><b>${b.t}</b><br><span class="mute">${b.a}</span></p><button class="btn ghost sm" data-a="status" data-id="${b.id}" data-s="want" ${lib[b.id]?"disabled":""}>${lib[b.id]?"On your shelf":"Want to read"}</button></div>`).join("")}</div>`:`<div class="empty">Nothing matches yet. Clear the mood or try a different name.</div>`}`};
+
+V.book=()=>{const b=S.book,st=lib[b.id],mine=pages.filter(p=>p.b===b.id);
+return `<button class="tab" data-a="go" data-v="discover">‹ Back to Discover</button><div class="book" style="margin-top:16px"><div>${cover(b,"lg")}</div><div><h1>${b.t}</h1><p class="mute">${b.a}</p><p>${b.d}</p><div>${b.m.map(m=>`<span class="chip">${m}</span>`).join("")}</div>
+<div class="tools">${[["want","Want to read"],["now","Reading now"],["read","Finished"]].map(([s,l])=>`<button class="btn ${st===s?"":"ghost"} sm" data-a="status" data-id="${b.id}" data-s="${s}">${l}</button>`).join("")}</div><button class="btn" data-a="finish" data-id="${b.id}">Write a page for this book</button><label for="n-${b.id}">Your notes</label><textarea id="n-${b.id}" placeholder="Private notes, saved on this device">${esc(notes[b.id]||"")}</textarea></div></div>
+<h2 style="margin:34px 0 14px;font-size:1.3rem">Your pages for this book</h2>${mine.length?`<div class="feed">${mine.map(p=>pageHTML(p,"mini")).join("")}</div>`:`<div class="empty">No page yet. Finish it and make the first one.</div>`}`};
+
+V.library=()=>{const F=S.lf||"all",srt=pref.sort,SH={now:"On the nightstand",want:"Waiting for you",read:"Finished"};
+const ids=B.filter(b=>lib[b.id]&&(F==="all"||lib[b.id]===F)).sort((a,b)=>srt==="title"?a.t.localeCompare(b.t):srt==="author"?a.a.localeCompare(b.a):(upd[b.id]||0)-(upd[a.id]||0));
+const act=b=>{const s=lib[b.id];return `<div class="tools">${[["want","Want to read"],["now","Reading now"],["read","Finished"]].filter(([k])=>k!==s).map(([k,l])=>`<button class="btn ghost sm" data-a="status" data-id="${b.id}" data-s="${k}">${l}</button>`).join("")}${s==="read"?`<button class="btn sm" data-a="finish" data-id="${b.id}">${pages.some(p=>p.b===b.id)?"Add a page":"Write a page"}</button>`:""}</div>`};
+const body=!ids.length?`<div class="empty">${B.some(b=>lib[b.id])?"Nothing on this shelf yet.":"Your shelves are empty."}<br><button class="btn sm" style="margin-top:10px" data-a="go" data-v="discover">Browse Discover</button></div>`:pref.lv==="list"?ids.map(b=>`<div class="lrow">${bkBtn(b,"sm")}<div style="flex:1"><b>${b.t}</b> <span class="mute">${b.a} · ${SH[lib[b.id]]}</span>${act(b)}<input id="n-${b.id}" aria-label="Notes on ${esc(b.t)}" placeholder="A private note" value="${esc(notes[b.id]||"")}"></div></div>`).join(""):Object.keys(SH).map(k=>{const l=ids.filter(b=>lib[b.id]===k);return l.length?`<h2 style="font-size:1.25rem;margin:26px 0 12px">${SH[k]}</h2><div class="grid">${l.map(b=>`<div>${bkBtn(b)}${act(b)}</div>`).join("")}</div>`:""}).join("");
+return `<div class="top"><h1>Your shelves</h1></div><div class="tools">${[["all","All"],["now","Reading now"],["want","Want to read"],["read","Finished"]].map(([k,l])=>`<button class="chip ${F===k?"on":""}" data-a="lf" data-f="${k}" aria-pressed="${F===k}">${l}</button>`).join("")}</div>
+<div class="tools"><label class="inl">Sort <select id="lsort">${[["upd","Recently updated"],["title","Title"],["author","Author"]].map(([k,l])=>`<option value="${k}" ${srt===k?"selected":""}>${l}</option>`).join("")}</select></label><button class="btn ghost sm" data-a="lview" data-v="grid" aria-pressed="${pref.lv!=="list"}">Shelves</button><button class="btn ghost sm" data-a="lview" data-v="list" aria-pressed="${pref.lv==="list"}">List</button></div>${body}`};
+
+V.create=()=>{if(S.placed){const p=S.placed;return `<div class="placed"><div class="slot">${pageHTML(p,"")}</div><div class="jb" aria-hidden="true"></div><h1>Placed in your journal</h1><p class="lede">Page ${folio(p)} of ${pages.length}: ${bk(p.b).t}.</p><div class="tools"><button class="btn" data-a="viewplaced">View in my journal</button><button class="btn ghost" data-a="another">Write another</button></div></div>`}
+const d=S.d||(S.d=loadDraft(S.book&&S.book.id)),LAY=[["bot","Botanical"],["ann","Annotated"],["min","Minimal"],["quo","Quote-led"]];
+return `${S.fresh?`<div class="banner hand">You turned the last page. What did it leave you with?</div>`:""}<div class="top"><h1>A fresh page</h1></div><div class="comp"><div>
+<label for="cb">Book</label><select id="cb">${B.map(b=>`<option value="${b.id}" ${b.id==d.b?"selected":""}>${b.t}</option>`).join("")}</select>
+<label>Rating</label><div class="stars" id="cs">${[1,2,3,4,5].map(n=>`<b data-a="star" data-n="${n}" class="${n<=d.r?"f":""}" aria-label="${n} stars" role="button" tabindex="0">★</b>`).join("")}</div>
+<label>How did it feel?</label><div id="cm">${MOODS.map(m=>`<button class="chip ${d.moods.includes(m)?"on":""}" data-a="cmood" data-m="${m}" aria-pressed="${d.moods.includes(m)}">${m}</button>`).join("")}</div>
+<label for="ct">Your page</label><p class="hand mute" style="margin:0 0 6px">Today’s prompt: ${prompt()}</p><textarea id="ct" placeholder="A few sentences is plenty.">${esc(d.text)}</textarea>
+<label><input type="checkbox" id="ch" ${d.hand?"checked":""} style="width:auto"> Show as handwriting</label>
+<label for="cw">Where I was when I finished</label><input id="cw" maxlength="80" value="${esc(d.where||"")}" placeholder="Optional">
+<label for="cr">What I want to remember</label><input id="cr" maxlength="120" value="${esc(d.rem||"")}" placeholder="Optional">
+<label for="cq">A line you’ll keep</label><input id="cq" value="${esc(d.quote)}" placeholder="Favourite quote">
+<label>Page style</label><div>${LAY.map(([k,l])=>`<button class="chip ${d.lay===k?"on":""}" data-a="lay" data-l="${k}" aria-pressed="${d.lay===k}">${l}</button>`).join("")}</div>
+<label>Paper</label><div>${["paper","mint","plum","sky"].map(q=>`<button class="chip ${d.paper===q?"on":""}" data-a="cpaper" data-p="${q}" aria-pressed="${d.paper===q}">${PL[q]}</button>`).join("")}</div>
+<label>Decorations</label><div>${Object.keys(SVG).map(k=>`<button class="chip ${d.stk.includes(k)?"on":""}" data-a="cstk" data-s="${k}" aria-pressed="${d.stk.includes(k)}">${SL[k]}</button>`).join("")}</div>
+${d.stk.length?`<p class="mute" style="margin:8px 0 0">Order: ${d.stk.map((k,i)=>`<span class="ord">${SL[k]}<button class="mv" data-a="smove" data-i="${i}" data-d="-1" aria-label="Move ${SL[k]} earlier">‹</button><button class="mv" data-a="smove" data-i="${i}" data-d="1" aria-label="Move ${SL[k]} later">›</button></span>`).join("")}</p>`:""}
+<label for="cv">Who can see this</label><select id="cv">${[["public","Everyone"],["friends","Friends only"],["me","Only me"]].map(([v,l])=>`<option value="${v}" ${d.vis===v?"selected":""}>${l}</option>`).join("")}</select>
+<div class="tools" style="margin-top:20px"><button class="btn" data-a="save">Add to my journal</button><button class="btn ghost" data-a="discard">Clear draft</button></div><p class="mute" style="font-size:.85rem;margin:0">Drafts save automatically on this device. Visibility is a saved preference; sharing arrives with an account system.</p></div>
+<div id="cp" style="position:sticky;top:20px"></div></div>`};
+const cprev=()=>{if(!S.d)return;save("mg_draft",S.d);const e=document.getElementById("cp");if(e)e.innerHTML=pageHTML({...S.d,id:0})+'<p class="hand mute" style="text-align:center;margin:14px 0 0">Your page, as it will be kept</p>'};
+
+V.profileOpen=()=>{const all=[...pages].sort((a,b)=>a.date.localeCompare(b.date)),list=S.tab==="fav"?all.filter(p=>p.r>=5):all;
+if(S.jp>=list.length)S.jp=Math.max(0,list.length-1);const p=list[S.jp];
+return `<div class="top"><div>${sprig()}<p class="mute" style="margin:0">Ana’s reading journal</p><h1>${all.length} pages kept</h1></div><div class="tools"><button class="btn ghost" data-a="close">Close the cover</button><button class="btn ghost" data-a="shuffle">Shuffle my journal</button><button class="btn ghost" data-a="share">Share my journal</button></div></div>
+<div style="margin-bottom:18px"><button class="tab ${S.tab==="all"?"on":""}" data-a="tab" data-t="all">Chronological</button><button class="tab ${S.tab==="fav"?"on":""}" data-a="tab" data-t="fav">Favourite reads</button></div>
+${p?`<div class="jr"><div id="pgwrap" class="${S.dir}">${pageHTML(p)}</div><div><h2 style="font-size:1.2rem">Page ${S.jp+1} of ${list.length}</h2><p class="mute">${bk(p.b).t}, finished ${fmt(p.date)}</p><div class="tools"><button class="btn ghost sm" data-a="flip" data-n="-1" ${S.jp===0?"disabled":""}>‹ Earlier</button><button class="btn ghost sm" data-a="flip" data-n="1" ${S.jp>=list.length-1?"disabled":""}>Later ›</button><button class="btn ghost sm" data-a="share">Share this page</button></div><div class="pgs" role="tablist">${list.map((q,i)=>`<button class="bk ${i===S.jp?"on":""}" data-a="jump" data-n="${i}" aria-label="Page ${i+1}">${cover(bk(q.b),"sm")}<small>${shortDate(q.date)}</small></button>`).join("")}</div><p class="mute" style="margin-top:18px">Every page is the same size and keeps its margins, so your journal can be printed as a book later.</p></div></div>`:`<div class="empty">Nothing here yet. Finish a book and write your first page.</div>`}`};
+
+V.community=()=>{const cl=[["The Slow Readers","Rebecca","412 readers"],["Late Night Gothic","The Secret History","1.2k readers"],["Quiet Books","Klara and the Sun","236 readers"]];
+return `<div class="top"><h1>Your reading people</h1></div><div class="feed">${cl.map(([n,b,r],i)=>`<div class="card ${i%2?"tilt2":""}"><h3>${n}</h3><p class="mute">Reading <i>${b}</i> · ${r}</p><button class="btn ${S.join[n]?"ghost":""} sm" data-a="join" data-n="${n}">${S.join[n]?"Joined":"Join the club"}</button></div>`).join("")}<div class="card span2"><b>Friends reading now</b><div class="row wrap" style="margin-top:12px">${[["Mira",3],["Jonas",6],["Ana",8]].map(([n,i],k)=>`<div class="row" style="align-items:center"><span class="av" style="background:${AV[k]}">${n[0]}</span><span>${n} · ${bk(i).t}</span></div>`).join("")}</div></div></div>`};
+
+
+function render(){const m=document.getElementById("main");m.innerHTML=(V[S.v]||V.home)();nav();if(S.v==="create")cprev();S.dir=""}
+function go(v,b){S.v=v;S.placed=null;if(b)S.book=b;else if(v==="create")S.book=null;if(v!=="create"){S.d=null;S.fresh=false}try{history.replaceState(null,"","#"+(v==="book"?"discover":v))}catch(e){}render();window.scrollTo(0,0)}
+function finish(id){S.placed=null;S.d=null;S.book=bk(id);S.fresh=true;S.v="create";render();window.scrollTo(0,0)}
+
+document.addEventListener("click",e=>{const t=e.target.closest("[data-a]");if(!t)return;const D=t.dataset,a=D.a;
+if(a==="go")go(D.v);
+else if(a==="book")go("book",bk(D.id));
+else if(a==="finish")finish(D.id);
+else if(a==="status"){lib[D.id]=D.s;upd[D.id]=Date.now();save("mg_lib",lib);save("mg_upd",upd);if(D.s==="read"){finish(D.id)}else{render();toast("Moved to your shelf")}}
+else if(a==="mood"){S.mood=S.mood===D.m?"":D.m;render()}
+else if(a==="poll"){S.poll=+D.i;save("mg_poll",S.poll);render()}
+else if(a==="star"){S.d.r=+D.n;document.querySelectorAll("#cs b").forEach((b,i)=>b.classList.toggle("f",i<S.d.r));cprev()}
+else if(a==="cmood"){const m=S.d.moods,i=m.indexOf(D.m);i<0?m.push(D.m):m.splice(i,1);render()}
+else if(a==="cpaper"){S.d.paper=D.p;document.querySelectorAll('[data-a=cpaper]').forEach(b=>b.classList.toggle("on",b===t));cprev()}
+else if(a==="cstk"){const k=S.d.stk,i=k.indexOf(D.s);i<0?k.push(D.s):k.splice(i,1);render()}
+else if(a==="save"){if(!S.d.r){toast("Give it a star rating first");return}
+ const np={id:Date.now(),...S.d};pages.push(np);lib[np.b]="read";upd[np.b]=Date.now();save("mg_pages",pages);save("mg_lib",lib);save("mg_upd",upd);save("mg_draft",null);S.placed=np;S.d=null;S.fresh=false;render();window.scrollTo(0,0);toast("Page placed in your journal")}
+else if(a==="viewplaced"){S.jp=SORTED().findIndex(p=>p.id===S.placed.id);S.placed=null;S.open=true;S.tab="all";S.v="profile";S.dir="flipR";render();window.scrollTo(0,0)}
+else if(a==="another"){S.placed=null;S.d=null;S.book=null;render()}
+else if(a==="discard"){save("mg_draft",null);S.d=null;render();toast("Draft cleared")}
+else if(a==="lay"){S.d.lay=D.l;render()}
+else if(a==="smove"){const k=S.d.stk,i=+D.i,j=i+ +D.d;if(j>=0&&j<k.length)[k[i],k[j]]=[k[j],k[i]];render()}
+else if(a==="react"||a==="bm"){const m=a==="react"?rxn:bm;m[D.k]=!m[D.k];save(a==="react"?"mg_rx":"mg_bm",m);render();toast(a==="react"?(m[D.k]?"You appreciated this page":"Reaction removed"):(m[D.k]?"Saved for later":"Removed from saved"))}
+else if(a==="shuffle"){if(!pages.length){toast("No pages yet. Write your first one.");return}S.open=true;S.tab="all";S.v="profile";S.jp=Math.floor(Math.random()*pages.length);S.dir="flipR";render();window.scrollTo(0,0);toast("A page from your journal")}
+else if(a==="surprise"){const c=B.filter(b=>!lib[b.id]),pl=c.length?c:B,b=pl[Math.floor(Math.random()*pl.length)];go("book",b);toast("Here’s one from the shelves")}
+else if(a==="quiz"){S.quiz=S.quiz?null:{m:"",l:""};render()}
+else if(a==="qm"){S.quiz.m=D.m;render()}else if(a==="ql"){S.quiz.l=D.l;render()}
+else if(a==="lf"){S.lf=D.f;render()}
+else if(a==="lview"){pref.lv=D.v;save("mg_pref",pref);render()}
+else if(a==="flip"||a==="jump"){const n=a==="flip"?S.jp+ +D.n:+D.n;S.dir=n>S.jp?"flipR":"flipL";S.jp=n;render()}
+else if(a==="tab"){S.tab=D.t;S.jp=0;render()}
+else if(a==="join"){S.join[D.n]=!S.join[D.n];save("mg_join",S.join);render()}
+else if(a==="open"){S.open=true;S.dir="flipR";render()}
+else if(a==="close"){S.open=false;render()}
+else if(a==="jumpopen"){S.open=true;S.tab="all";S.jp=+D.n;S.dir="flipR";render()}
+else if(a==="share")toast("Sharing links arrive with the backend")});
+document.addEventListener("input",e=>{const i=e.target.id;
+if(i.startsWith("n-")){notes[i.slice(2)]=e.target.value;save("mg_notes",notes);return}
+if(i==="lsort"){pref.sort=e.target.value;save("mg_pref",pref);render();return}
+if(i==="q"){S.q=e.target.value;const p=e.target.selectionStart;render();const n=document.getElementById("q");n.focus();n.setSelectionRange(p,p);return}
+const d=S.d;if(!d||S.v!=="create")return;
+if(i==="ct")d.text=e.target.value;else if(i==="cq")d.quote=e.target.value;else if(i==="ch")d.hand=e.target.checked;else if(i==="cb")d.b=+e.target.value;else if(i==="cv")d.vis=e.target.value;else if(i==="cw")d.where=e.target.value;else if(i==="cr")d.rem=e.target.value;
+cprev()});
+render();
+</script>
+</body>
+</html>
